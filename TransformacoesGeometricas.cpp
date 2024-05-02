@@ -404,7 +404,7 @@ void DesenhaBalasNavesInimigas(float tempoDecorrido)
             }
 
             // verifica se a bala acertou o disparador
-            float minX = vetorDePersonagens[0].Posicao.x - vetorDePersonagens[0].Largura;
+float minX = vetorDePersonagens[0].Posicao.x - vetorDePersonagens[0].Largura;
             float maxX = vetorDePersonagens[0].Posicao.x + vetorDePersonagens[0].Largura;
             float minY = vetorDePersonagens[0].Posicao.y;
             float maxY = vetorDePersonagens[0].Posicao.y + vetorDePersonagens[0].Altura;
@@ -416,12 +416,45 @@ void DesenhaBalasNavesInimigas(float tempoDecorrido)
                 vetorDePersonagens[i].nInstanciasBalas--;
                 j--;
 
-                decrementaVidas();
+                vidasDisparador--; // Decrementa a vida da nave
+
+                // Verifica se as vidas da nave acabaram
+                if (vidasDisparador <= 0)
+                {
+                    cout << "Você perdeu! Suas vidas acabaram." << endl;
+                    exit(0); // Encerra o jogo
+                }
                 break;
             }
         }
     }
 }
+void DesenhaIconesVida()
+{
+    glColor3f(1.0, 0.0, 0.0); // Cor vermelha para os ícones de vida
+
+    // Define a posição inicial dos ícones de vida no canto inferior esquerdo
+    float posX = Min.x + 20;
+    float posY = Min.y + 20;
+
+    // Desenha os ícones de vida
+    for (int i = 0; i < vidasDisparador; i++)
+    {
+        glPushMatrix();
+        glTranslatef(posX, posY, 0.0); // Posição dos ícones
+        glBegin(GL_POLYGON);
+        glVertex2f(0.0, 0.0);
+        glVertex2f(10.0, 0.0); // Tamanho dos ícones
+        glVertex2f(10.0, 10.0);
+        glVertex2f(0.0, 10.0);
+        glEnd();
+        glPopMatrix();
+
+        // Ajusta a posição vertical para a próxima linha de ícones
+        posY += 15.0;
+    }
+}
+
 
 void display(void)
 {
@@ -444,6 +477,7 @@ void display(void)
     DesenhaBalasDisparador(T2.getDeltaT());
     DesenhaBalasNavesInimigas(T2.getDeltaT());
 
+    DesenhaIconesVida();
     glutSwapBuffers();
 }
 
