@@ -64,7 +64,7 @@ void init()
     Max = Ponto(d, d);
 
     CarregaModelos();
-    CriaPersonagens(10);
+    CriaPersonagens(2);
 }
 
 double nFrames = 0;
@@ -286,21 +286,38 @@ void CriaBalasDisparador()
     }
 }
 
+void ApontaNavesDisparador(Personagens& p) {
+    // Obtém a posição do disparador
+    Ponto pontoDisparador = vetorDePersonagens[0].Posicao;
+
+    // Obtém a posição da nave inimiga
+    Ponto pontoNave = p.Posicao;
+
+    // Calcula o vetor entre a nave inimiga e o disparador
+    float vetorX = pontoDisparador.x - pontoNave.x;
+    float vetorY = pontoDisparador.y - pontoNave.y;
+
+    // Calcula o ângulo entre esse vetor e o vetor (0, 1)
+    float anguloRad = atan(vetorY/vetorX);
+
+    // Converte o ângulo de radianos para graus
+    float anguloGraus = anguloRad * 180.0 / M_PI;
+
+    if(pontoDisparador.x < pontoNave.x ){
+        p.Rotacao = anguloGraus + 90;
+    }
+    if(pontoDisparador.x > pontoNave.x){
+        p.Rotacao = anguloGraus - 90;
+    }
+}
+
+
+
 void CriaBalasNavesInimigas()
 {
     for (int i = 1; i < nInstanciasPersonagens; i++)
     {
-        Ponto p1 = vetorDePersonagens[i].Posicao;
-        Ponto p2 = vetorDePersonagens[0].Posicao;
-        // Calcula o ângulo entre a posição da nave inimiga e a posição do disparador
-        float anguloRad = atan2(p2.y - p1.y, p2.x - p1.x);
-
-        // Converte o ângulo de radianos para graus
-        float anguloGraus = anguloRad * 180.0 / M_PI;
-
-        // Define o ângulo calculado como a rotação da nave inimiga
-        vetorDePersonagens[i].Rotacao = anguloGraus;
-        
+        ApontaNavesDisparador(vetorDePersonagens[i]);
         if (vetorDePersonagens[i].nInstanciasBalas < 10)
         {
             // calcula a posição inicial da bala na ponta do disparador
@@ -326,7 +343,7 @@ void DesenhaPersonagens(float tempoDecorrido)
     for (int i = 0; i < nInstanciasPersonagens; i++)
     {
         if (i != 1)
-        {
+        {            
             vetorDePersonagens[i].AtualizaPosicao(tempoDecorrido);
         }
         vetorDePersonagens[i].desenha();
@@ -380,8 +397,6 @@ void DesenhaBalasDisparador(float tempoDecorrido)
 
 void DesenhaBalasNavesInimigas(float tempoDecorrido)
 {
-    Ponto direcaoDisparador = vetorDePersonagens[0].Posicao;
-
     for (int i = 1; i < nInstanciasPersonagens; i++)
     {
         for (int j = 0; j < vetorDePersonagens[i].nInstanciasBalas; j++)
@@ -404,7 +419,7 @@ void DesenhaBalasNavesInimigas(float tempoDecorrido)
             }
 
             // verifica se a bala acertou o disparador
-float minX = vetorDePersonagens[0].Posicao.x - vetorDePersonagens[0].Largura;
+            float minX = vetorDePersonagens[0].Posicao.x - vetorDePersonagens[0].Largura;
             float maxX = vetorDePersonagens[0].Posicao.x + vetorDePersonagens[0].Largura;
             float minY = vetorDePersonagens[0].Posicao.y;
             float maxY = vetorDePersonagens[0].Posicao.y + vetorDePersonagens[0].Altura;
