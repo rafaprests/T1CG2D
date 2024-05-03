@@ -64,9 +64,6 @@ void CarregaModelos()
 
 void init()
 {
-    // Define a cor do fundo da tela (AZUL)
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
     float d = 150;
     Min = Ponto(-d, -d);
     Max = Ponto(d, d);
@@ -526,21 +523,20 @@ void display(void)
     // Limpa a tela coma cor de fundo
     glClear(GL_COLOR_BUFFER_BIT);
 
-
     if (telaInicial)
     {
         DesenhaTelaInicial();
     }
     else
     {
-        if (telaFinal)
+        if (telaVitoria)
         {
-            DesenhaTelaFinal();
+            DesenhaTelaVitoria();
         }
         else
         {
-            if(telaVitoria){
-                DesenhaTelaVitoria();
+            if(telaFinal){
+                DesenhaTelaFinal();
             }
             else{
             // Define os limites l�gicos da �rea OpenGL dentro da Janela
@@ -582,11 +578,22 @@ void keyboard(unsigned char key, int x, int y)
             CriaBalasDisparador();
         }
         break;
-    // case 'r':
-    //     if(telaFinal){
-    //         telaFinal = false;
-    //     }
-    //     break;
+    case 'r':
+        if(telaFinal){
+            nInstanciasBalas = 0;
+            vidasDisparador = 3;
+            angulo = 0.0;
+            nPontos = 0;
+            nInstanciasPersonagens = 10;
+            Personagens p;
+            for(int i = 0; i < nInstanciasPersonagens; i++){
+                vetorDePersonagens[i] = p;
+            }
+            init();
+            telaInicial = true;
+        }
+        telaFinal = false;
+        break;
     default:
         break;
     }
