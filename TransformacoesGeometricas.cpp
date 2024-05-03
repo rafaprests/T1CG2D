@@ -32,16 +32,25 @@ Poligono Mapa, Disparador, NaveInimiga, Bala;
 
 // Limites logicos da area de desenho
 Ponto Min, Max;
+
 // vetor para guardar a posicao dos personagens
 Ponto vetorPontos[10];
-//vetor para armazenar os personagens
-Personagens vetorDePersonagens[nInstanciasPersonagens];
+
+// vetor para armazenar os personagens
 int nInstanciasPersonagens = 10;
+Personagens vetorDePersonagens[10];
+
 int nPontos = 0;
-//caracteristicas inerentes ao disparador
+
+// caracteristicas inerentes ao disparador
 int nInstanciasBalas = 0;
 int vidasDisparador = 3;
 float angulo = 0.0;
+
+// variaveis de estado
+bool telaInicial = true;
+bool telaFinal = false;
+bool telaVitoria = false;
 
 void CriaPersonagens(int numeroDePersonagens);
 void CriaBalasNavesInimigas();
@@ -148,6 +157,62 @@ void DesenhaBala()
     glPopMatrix();
 }
 
+void DesenhaTelaInicial()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    defineCor(DarkPurple);
+    glRasterPos2f(-50, 20);
+    string texto = "Press SPACE to start";
+    for (const char &c : texto)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
+    DesenhaDisparador();
+}
+
+void DesenhaTelaFinal()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    defineCor(Copper);
+    glRasterPos2f(-35, 20);
+    string texto1 = "GAME OVER";
+    for (const char &c : texto1)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
+
+    glRasterPos2f(-22, -10);
+    string texto2 = "Press R to restart";
+    for (const char &c : texto2)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, c);
+    }
+    glPushMatrix();
+    glTranslatef(-15, 0, 0);
+    DesenhaNaveInimiga();
+    glTranslatef(15, 0, 0);
+    DesenhaNaveInimiga();
+    glTranslatef(15, 0, 0);
+    DesenhaNaveInimiga();
+    glPopMatrix();
+}
+
+void DesenhaTelaVitoria()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    defineCor(DarkPurple);
+    glRasterPos2f(-20, 20);
+    string texto = "You WON!";
+    for (const char &c : texto)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
+    DesenhaDisparador();
+}
+
 float distanciaEntrePontos(const Ponto &p1, const Ponto &p2)
 {
     float dx = p2.x - p1.x;
@@ -222,18 +287,6 @@ bool verificaBalaAtingiuObjeto(Balas b, float minX, float maxX, float minY, floa
     }
 }
 
-void decrementaVidas()
-{
-    vidasDisparador--;
-    // Verifica se o disparador foi destruído
-    if (vidasDisparador == 0)
-    {
-        // Remove o disparador do array de personagens
-        vetorDePersonagens[0] = vetorDePersonagens[nInstanciasPersonagens - 1];
-        nInstanciasPersonagens--;
-    }
-}
-
 void CriaPersonagens(int numeroDePersonagens)
 {
     inicializaPontos(numeroDePersonagens);
@@ -283,7 +336,8 @@ void CriaBalasDisparador()
     }
 }
 
-void ApontaNavesDisparador(Personagens& p) {
+void ApontaNavesDisparador(Personagens &p)
+{
     Ponto pontoDisparador = vetorDePersonagens[0].Posicao;
     Ponto pontoNave = p.Posicao;
 
@@ -292,13 +346,15 @@ void ApontaNavesDisparador(Personagens& p) {
     float vetorY = pontoDisparador.y - pontoNave.y;
 
     // Calcula o ângulo entre os vetores
-    float anguloRad = atan(vetorY/vetorX);
+    float anguloRad = atan(vetorY / vetorX);
     float anguloGraus = anguloRad * 180.0 / M_PI;
 
-    if(pontoDisparador.x < pontoNave.x ){
+    if (pontoDisparador.x < pontoNave.x)
+    {
         p.Rotacao = anguloGraus + 90;
     }
-    if(pontoDisparador.x > pontoNave.x){
+    if (pontoDisparador.x > pontoNave.x)
+    {
         p.Rotacao = anguloGraus - 90;
     }
 }
@@ -333,7 +389,7 @@ void DesenhaPersonagens(float tempoDecorrido)
     for (int i = 0; i < nInstanciasPersonagens; i++)
     {
         if (i != 1)
-        {            
+        {
             vetorDePersonagens[i].AtualizaPosicao(tempoDecorrido);
         }
         vetorDePersonagens[i].desenha();
@@ -379,6 +435,11 @@ void DesenhaBalasDisparador(float tempoDecorrido)
                 vetorDePersonagens[0].vetorDeBalas[i] = vetorDePersonagens[0].vetorDeBalas[vetorDePersonagens[0].nInstanciasBalas - 1];
                 vetorDePersonagens[0].nInstanciasBalas--;
                 i--;
+
+                if(nInstanciasPersonagens == 1){
+                    telaVitoria = true;
+                }
+
                 break;
             }
         }
@@ -426,8 +487,7 @@ void DesenhaBalasNavesInimigas(float tempoDecorrido)
                 // Verifica se as vidas da nave acabaram
                 if (vidasDisparador <= 0)
                 {
-                    cout << "Você perdeu! Suas vidas acabaram." << endl;
-                    exit(0); // Encerra o jogo
+                    telaFinal = true;
                 }
                 break;
             }
@@ -447,10 +507,10 @@ void DesenhaIconesVida()
     for (int i = 0; i < vidasDisparador; i++)
     {
         glPushMatrix();
-        glTranslatef(posX, posY, 0.0); 
+        glTranslatef(posX, posY, 0.0);
         glBegin(GL_POLYGON);
         glVertex2f(0.0, 0.0);
-        glVertex2f(10.0, 0.0); 
+        glVertex2f(10.0, 0.0);
         glVertex2f(10.0, 10.0);
         glVertex2f(0.0, 10.0);
         glEnd();
@@ -463,26 +523,45 @@ void DesenhaIconesVida()
 
 void display(void)
 {
-
     // Limpa a tela coma cor de fundo
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Define os limites l�gicos da �rea OpenGL dentro da Janela
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
 
-    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    // Coloque aqui as chamadas das rotinas que desenham os objetos
-    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    if (telaInicial)
+    {
+        DesenhaTelaInicial();
+    }
+    else
+    {
+        if (telaFinal)
+        {
+            DesenhaTelaFinal();
+        }
+        else
+        {
+            if(telaVitoria){
+                DesenhaTelaVitoria();
+            }
+            else{
+            // Define os limites l�gicos da �rea OpenGL dentro da Janela
+            glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity();
 
-    glLineWidth(1);
-    defineCor(SkyBlue);
+            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            // Coloque aqui as chamadas das rotinas que desenham os objetos
+            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-    DesenhaPersonagens(T2.getDeltaT());
-    DesenhaBalasDisparador(T2.getDeltaT());
-    DesenhaBalasNavesInimigas(T2.getDeltaT());
+            glLineWidth(1);
+            defineCor(SkyBlue);
 
-    DesenhaIconesVida();
+            DesenhaPersonagens(T2.getDeltaT());
+            DesenhaBalasDisparador(T2.getDeltaT());
+            DesenhaBalasNavesInimigas(T2.getDeltaT());
+
+            DesenhaIconesVida();
+            }
+        }
+    }
     glutSwapBuffers();
 }
 
@@ -495,11 +574,19 @@ void keyboard(unsigned char key, int x, int y)
         exit(0); // a tecla ESC for pressionada
         break;
     case ' ':
-        if (vetorDePersonagens[0].nInstanciasBalas < 10)
+        if(telaInicial){
+            telaInicial = false;
+        }
+        if(vetorDePersonagens[0].nInstanciasBalas < 10)
         {
             CriaBalasDisparador();
         }
         break;
+    // case 'r':
+    //     if(telaFinal){
+    //         telaFinal = false;
+    //     }
+    //     break;
     default:
         break;
     }
