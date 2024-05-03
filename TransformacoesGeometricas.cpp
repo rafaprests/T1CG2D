@@ -28,20 +28,19 @@ Temporizador T;
 double AccumDeltaT = 0;
 Temporizador T2;
 
-Personagens vetorDePersonagens[10];
-Ponto vetorPontos[10];
-int vidasDisparador = 3;
+Poligono Mapa, Disparador, NaveInimiga, Bala;
 
 // Limites logicos da area de desenho
 Ponto Min, Max;
-
-bool desenha = false;
-
-Poligono Mapa, Disparador, NaveInimiga, Bala;
-int nInstanciasPersonagens = 0;
-int nInstanciasBalas = 0;
+// vetor para guardar a posicao dos personagens
+Ponto vetorPontos[10];
+//vetor para armazenar os personagens
+Personagens vetorDePersonagens[nInstanciasPersonagens];
+int nInstanciasPersonagens = 10;
 int nPontos = 0;
-
+//caracteristicas inerentes ao disparador
+int nInstanciasBalas = 0;
+int vidasDisparador = 3;
 float angulo = 0.0;
 
 void CriaPersonagens(int numeroDePersonagens);
@@ -64,7 +63,7 @@ void init()
     Max = Ponto(d, d);
 
     CarregaModelos();
-    CriaPersonagens(2);
+    CriaPersonagens(nInstanciasPersonagens);
 }
 
 double nFrames = 0;
@@ -182,9 +181,9 @@ Ponto CriaPontosAleatorios()
     return novoPonto;
 }
 
-void inicializaPontos()
+void inicializaPontos(int nroPontos)
 {
-    for (int i = 0; i < nInstanciasPersonagens; i++)
+    for (int i = 0; i < nroPontos; i++)
     {
         if (i == 0)
         {
@@ -237,9 +236,7 @@ void decrementaVidas()
 
 void CriaPersonagens(int numeroDePersonagens)
 {
-    nInstanciasPersonagens = numeroDePersonagens;
-
-    inicializaPontos();
+    inicializaPontos(numeroDePersonagens);
 
     for (int i = 0; i < numeroDePersonagens; i++)
     {
@@ -287,20 +284,15 @@ void CriaBalasDisparador()
 }
 
 void ApontaNavesDisparador(Personagens& p) {
-    // Obtém a posição do disparador
     Ponto pontoDisparador = vetorDePersonagens[0].Posicao;
-
-    // Obtém a posição da nave inimiga
     Ponto pontoNave = p.Posicao;
 
     // Calcula o vetor entre a nave inimiga e o disparador
     float vetorX = pontoDisparador.x - pontoNave.x;
     float vetorY = pontoDisparador.y - pontoNave.y;
 
-    // Calcula o ângulo entre esse vetor e o vetor (0, 1)
+    // Calcula o ângulo entre os vetores
     float anguloRad = atan(vetorY/vetorX);
-
-    // Converte o ângulo de radianos para graus
     float anguloGraus = anguloRad * 180.0 / M_PI;
 
     if(pontoDisparador.x < pontoNave.x ){
@@ -310,8 +302,6 @@ void ApontaNavesDisparador(Personagens& p) {
         p.Rotacao = anguloGraus - 90;
     }
 }
-
-
 
 void CriaBalasNavesInimigas()
 {
@@ -330,8 +320,8 @@ void CriaBalasNavesInimigas()
             vetorDePersonagens[i].vetorDeBalas[vetorDePersonagens[i].nInstanciasBalas].modelo = DesenhaBala;
 
             // define o deslocamento da bala de acordo com a rotação do personagem
-            vetorDePersonagens[i].vetorDeBalas[vetorDePersonagens[i].nInstanciasBalas].Deslocamento.x = -deslocX;
-            vetorDePersonagens[i].vetorDeBalas[vetorDePersonagens[i].nInstanciasBalas].Deslocamento.y = deslocY;
+            vetorDePersonagens[i].vetorDeBalas[vetorDePersonagens[i].nInstanciasBalas].Deslocamento.x = -0.5 * deslocX;
+            vetorDePersonagens[i].vetorDeBalas[vetorDePersonagens[i].nInstanciasBalas].Deslocamento.y = 0.5 * deslocY;
 
             vetorDePersonagens[i].nInstanciasBalas++;
         }
@@ -444,6 +434,7 @@ void DesenhaBalasNavesInimigas(float tempoDecorrido)
         }
     }
 }
+
 void DesenhaIconesVida()
 {
     glColor3f(1.0, 0.0, 0.0); // Cor vermelha para os ícones de vida
@@ -456,10 +447,10 @@ void DesenhaIconesVida()
     for (int i = 0; i < vidasDisparador; i++)
     {
         glPushMatrix();
-        glTranslatef(posX, posY, 0.0); // Posição dos ícones
+        glTranslatef(posX, posY, 0.0); 
         glBegin(GL_POLYGON);
         glVertex2f(0.0, 0.0);
-        glVertex2f(10.0, 0.0); // Tamanho dos ícones
+        glVertex2f(10.0, 0.0); 
         glVertex2f(10.0, 10.0);
         glVertex2f(0.0, 10.0);
         glEnd();
@@ -469,7 +460,6 @@ void DesenhaIconesVida()
         posY += 15.0;
     }
 }
-
 
 void display(void)
 {
