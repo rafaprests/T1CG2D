@@ -28,7 +28,7 @@ Temporizador T;
 double AccumDeltaT = 0;
 Temporizador T2;
 
-Poligono Mapa, Disparador, NaveInimiga, Bala;
+Poligono Mapa, Disparador, NaveInimiga1, NaveInimiga2, NaveInimiga3, Bala;
 
 // Limites logicos da area de desenho
 Ponto Min, Max;
@@ -58,7 +58,9 @@ void CriaBalasNavesInimigas();
 void CarregaModelos()
 {
     Disparador.LePoligono("Disparador.txt");
-    NaveInimiga.LePoligono("NaveInimiga.txt");
+    NaveInimiga1.LePoligono("NaveInimiga1.txt");
+    NaveInimiga2.LePoligono("NaveInimiga2.txt");
+    NaveInimiga3.LePoligono("NaveInimiga3.txt");
     Bala.LePoligono("Bala.txt");
 }
 
@@ -122,23 +124,51 @@ void DesenhaDisparador()
     glPushMatrix();
     Disparador.desenhaPoligono();
     Disparador.pintaPoligono();
-    glScaled(-1, 1, 1);           // Escala o polígono por -1 no eixo x
-    Disparador.desenhaPoligono(); // Desenha o polígono espelhado
+    glScaled(-1, 1, 1);     
+    Disparador.desenhaPoligono(); 
     Disparador.pintaPoligono();
     glPopMatrix();
     glPopMatrix();
 }
 
-void DesenhaNaveInimiga()
+void DesenhaNaveInimiga1()
 {
     glPushMatrix();
     defineCor(Copper);
     glPushMatrix();
-    NaveInimiga.desenhaPoligono();
-    NaveInimiga.pintaPoligono();
+    NaveInimiga1.desenhaPoligono();
+    NaveInimiga1.pintaPoligono();
     glScaled(-1, 1, 1);
-    NaveInimiga.desenhaPoligono();
-    NaveInimiga.pintaPoligono();
+    NaveInimiga1.desenhaPoligono();
+    NaveInimiga1.pintaPoligono();
+    glPopMatrix();
+    glPopMatrix();
+}
+
+void DesenhaNaveInimiga2()
+{
+    glPushMatrix();
+    defineCor(Copper);
+    glPushMatrix();
+    NaveInimiga2.desenhaPoligono();
+    NaveInimiga2.pintaPoligono();
+    glScaled(-1, 1, 1);
+    NaveInimiga2.desenhaPoligono();
+    NaveInimiga2.pintaPoligono();
+    glPopMatrix();
+    glPopMatrix();
+}
+
+void DesenhaNaveInimiga3()
+{
+    glPushMatrix();
+    defineCor(Copper);
+    glPushMatrix();
+    NaveInimiga3.desenhaPoligono();
+    NaveInimiga3.pintaPoligono();
+    glScaled(-1, 1, 1);
+    NaveInimiga3.desenhaPoligono();
+    NaveInimiga3.pintaPoligono();
     glPopMatrix();
     glPopMatrix();
 }
@@ -188,11 +218,11 @@ void DesenhaTelaFinal()
     }
     glPushMatrix();
     glTranslatef(-15, 0, 0);
-    DesenhaNaveInimiga();
+    DesenhaNaveInimiga1();
     glTranslatef(15, 0, 0);
-    DesenhaNaveInimiga();
+    DesenhaNaveInimiga2();
     glTranslatef(15, 0, 0);
-    DesenhaNaveInimiga();
+    DesenhaNaveInimiga3();
     glPopMatrix();
 }
 
@@ -288,25 +318,40 @@ void CriaPersonagens(int numeroDePersonagens)
 {
     inicializaPontos(numeroDePersonagens);
 
+    int div = numeroDePersonagens/3;
+
     for (int i = 0; i < numeroDePersonagens; i++)
     {
         if (i == 0)
         {
-            // caracteristicas apenas do disparador
             vetorDePersonagens[0].modelo = DesenhaDisparador;
             vetorDePersonagens[0].Largura = 9;
             vetorDePersonagens[0].Altura = 7;
-
-            // caracteristicas gerais
             vetorDePersonagens[0].Posicao = vetorPontos[0];
             vetorDePersonagens[0].Rotacao = 0;
         }
-        else
+        else if (i <= div)
         {
             vetorDePersonagens[i].Posicao = vetorPontos[i];
             vetorDePersonagens[i].Rotacao = 0;
-            vetorDePersonagens[i].modelo = DesenhaNaveInimiga;
+            vetorDePersonagens[i].modelo = DesenhaNaveInimiga1;
             vetorDePersonagens[i].Largura = 6;
+            vetorDePersonagens[i].Altura = 8;
+        }
+        else if (i <= (2*div))
+        {
+            vetorDePersonagens[i].Posicao = vetorPontos[i];
+            vetorDePersonagens[i].Rotacao = 0;
+            vetorDePersonagens[i].modelo = DesenhaNaveInimiga2;
+            vetorDePersonagens[i].Largura = 5;
+            vetorDePersonagens[i].Altura = 8;
+        }
+        else if (i <= (3*div))
+        {
+            vetorDePersonagens[i].Posicao = vetorPontos[i];
+            vetorDePersonagens[i].Rotacao = 0;
+            vetorDePersonagens[i].modelo = DesenhaNaveInimiga3;
+            vetorDePersonagens[i].Largura = 4;
             vetorDePersonagens[i].Altura = 8;
         }
     }
