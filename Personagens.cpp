@@ -54,5 +54,25 @@ void Personagens::desenha()
 
 void Personagens::AtualizaPosicao(double tempoDecorrido)
 {
-    
+    int direcao = rand() % 4;
+
+    switch (direcao)
+    {
+        //cima
+        case 0:
+            Posicao.y += 1;
+            break;
+        //baixo
+        case 1:
+            Posicao.y -= 1;
+            break;
+        //esquerda
+        case 2:
+            Posicao.x -= 1;
+            break;
+        //direita
+        case 3:
+            Posicao.x += 1;
+            break;
+    }
 }

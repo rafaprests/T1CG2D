@@ -430,7 +430,7 @@ void DesenhaPersonagens(float tempoDecorrido)
 {
     for (int i = 0; i < nInstanciasPersonagens; i++)
     {
-        if (i != 1)
+        if (i != 0)
         {
             vetorDePersonagens[i].AtualizaPosicao(tempoDecorrido);
         }
