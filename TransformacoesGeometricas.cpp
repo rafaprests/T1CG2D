@@ -249,25 +249,43 @@ float distanciaEntrePontos(const Ponto &p1, const Ponto &p2)
 
 Ponto CriaPontosAleatorios()
 {
-    float minX = Min.x + 10; // Evita a borda da área de jogo
-    float maxX = Max.x - 10; // Evita a borda da área de jogo
-    float minY = Min.y + 10; // Evita a borda da área de jogo
-    float maxY = Max.y - 10; // Evita a borda da área de jogo
+    // Evita a borda da área de jogo
+    Ponto min = Ponto(Min.x + 5, Min.y + 5);
+    Ponto max = Ponto(Max.x - 5, Max.y - 5);
+
+    // Evita o quadrado inicial do disparador
+    Ponto minD = Ponto(vetorDePersonagens[0].Posicao.x -40,vetorDePersonagens[0].Posicao.y -40);
+    Ponto maxD = Ponto(vetorDePersonagens[0].Posicao.x + 40, vetorDePersonagens[0].Posicao.y + 40);    
 
     Ponto novoPonto;
     bool pontoValido = false;
 
     while (!pontoValido)
     {
-        float randX = minX + (rand() % (int)(maxX - minX));
-        float randY = minY + (rand() % (int)(maxY - minY));
+        float randX = min.x + (rand() % (int)(max.x - min.x));
+        float randY = min.y + (rand() % (int)(max.y - min.y));
         novoPonto = Ponto(randX, randY);
+        
+        // Verifica se o ponto está dentro do quadrado inicial do disparador
+        if (novoPonto.x >= minD.x && novoPonto.x <= maxD.x && novoPonto.y >= minD.y && novoPonto.y <= maxD.y)
+        {
+            continue; 
+        }
+        
+        // Verifica se o ponto está a uma distância segura dos pontos existentes
+        bool distanciaSegura = true;
         for (int i = 0; i < nPontos; i++)
         {
-            if (distanciaEntrePontos(novoPonto, vetorPontos[i]) > 20)
+            if (distanciaEntrePontos(novoPonto, vetorPontos[i]) < 10)
             {
-                pontoValido = true;
+                distanciaSegura = false;
+                break; 
             }
+        }
+        
+        if (distanciaSegura)
+        {
+            pontoValido = true;
         }
     }
     return novoPonto;
