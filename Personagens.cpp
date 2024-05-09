@@ -52,7 +52,7 @@ void Personagens::desenha()
     glPopMatrix();
 }
 
-void Personagens::AtualizaPosicao(double tempoDecorrido)
+void Personagens::AtualizaPosicao(double tempoDecorrido, Ponto min, Ponto max)
 {
     int direcao = rand() % 4;
 
@@ -61,18 +61,31 @@ void Personagens::AtualizaPosicao(double tempoDecorrido)
         //cima
         case 0:
             Posicao.y += 1;
+            if(Posicao.y >= max.y){
+                Posicao.y -= 1;
+            }
+            break;
+        
+        //esquerda
+        case 1:
+            Posicao.x -= 1;
+            if(Posicao.x <= min.y){
+                Posicao.x += 1;
+            }
             break;
         //baixo
-        case 1:
-            Posicao.y -= 1;
-            break;
-        //esquerda
         case 2:
-            Posicao.x -= 1;
+            Posicao.y -= 1;
+            if(Posicao.y <= min.y){
+                Posicao.y += 1;
+            }
             break;
         //direita
         case 3:
             Posicao.x += 1;
+            if(Posicao.x >= max.x){
+                Posicao.x -= 1;
+            }
             break;
     }
 }

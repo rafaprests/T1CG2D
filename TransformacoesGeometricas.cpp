@@ -124,8 +124,8 @@ void DesenhaDisparador()
     glPushMatrix();
     Disparador.desenhaPoligono();
     Disparador.pintaPoligono();
-    glScaled(-1, 1, 1);     
-    Disparador.desenhaPoligono(); 
+    glScaled(-1, 1, 1);
+    Disparador.desenhaPoligono();
     Disparador.pintaPoligono();
     glPopMatrix();
     glPopMatrix();
@@ -318,7 +318,7 @@ void CriaPersonagens(int numeroDePersonagens)
 {
     inicializaPontos(numeroDePersonagens);
 
-    int div = numeroDePersonagens/3;
+    int div = numeroDePersonagens / 3;
 
     for (int i = 0; i < numeroDePersonagens; i++)
     {
@@ -338,7 +338,7 @@ void CriaPersonagens(int numeroDePersonagens)
             vetorDePersonagens[i].Largura = 6;
             vetorDePersonagens[i].Altura = 8;
         }
-        else if (i <= (2*div))
+        else if (i <= (2 * div))
         {
             vetorDePersonagens[i].Posicao = vetorPontos[i];
             vetorDePersonagens[i].Rotacao = 0;
@@ -346,7 +346,7 @@ void CriaPersonagens(int numeroDePersonagens)
             vetorDePersonagens[i].Largura = 5;
             vetorDePersonagens[i].Altura = 8;
         }
-        else if (i <= (3*div))
+        else if (i <= (3 * div))
         {
             vetorDePersonagens[i].Posicao = vetorPontos[i];
             vetorDePersonagens[i].Rotacao = 0;
@@ -432,7 +432,7 @@ void DesenhaPersonagens(float tempoDecorrido)
     {
         if (i != 0)
         {
-            vetorDePersonagens[i].AtualizaPosicao(tempoDecorrido);
+            vetorDePersonagens[i].AtualizaPosicao(tempoDecorrido, Min, Max);
         }
         vetorDePersonagens[i].desenha();
     }
@@ -476,7 +476,8 @@ void DesenhaBalasDisparador(float tempoDecorrido)
                 vetorDePersonagens[0].nInstanciasBalas--;
                 i--;
 
-                if(nInstanciasPersonagens == 1){
+                if (nInstanciasPersonagens == 1)
+                {
                     telaVitoria = true;
                 }
 
@@ -558,6 +559,21 @@ void DesenhaIconesVida()
     }
 }
 
+void movimentaDisparador()
+{
+    // calcula o deslocamento do personagem de acordo com sua rotacao
+    float deslocX = sin((vetorDePersonagens[0].Rotacao * M_PI) / 180);
+    float deslocY = cos((vetorDePersonagens[0].Rotacao * M_PI) / 180);
+
+    Ponto novaPosicao = Ponto(vetorDePersonagens[0].Posicao.x + (3 * -deslocX), vetorDePersonagens[0].Posicao.y + (3 * deslocY));
+
+    if (novaPosicao.y < Max.y && novaPosicao.y > Min.y && novaPosicao.x > Min.x && novaPosicao.x < Max.x)
+    {
+        vetorDePersonagens[0].Posicao.x = novaPosicao.x;
+        vetorDePersonagens[0].Posicao.y = novaPosicao.y;
+    }
+}
+
 void display(void)
 {
     // Limpa a tela coma cor de fundo
@@ -575,26 +591,28 @@ void display(void)
         }
         else
         {
-            if(telaFinal){
+            if (telaFinal)
+            {
                 DesenhaTelaFinal();
             }
-            else{
-            // Define os limites l�gicos da �rea OpenGL dentro da Janela
-            glMatrixMode(GL_MODELVIEW);
-            glLoadIdentity();
+            else
+            {
+                // Define os limites l�gicos da �rea OpenGL dentro da Janela
+                glMatrixMode(GL_MODELVIEW);
+                glLoadIdentity();
 
-            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-            // Coloque aqui as chamadas das rotinas que desenham os objetos
-            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                // Coloque aqui as chamadas das rotinas que desenham os objetos
+                // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-            glLineWidth(1);
-            defineCor(SkyBlue);
+                glLineWidth(1);
+                defineCor(SkyBlue);
 
-            DesenhaPersonagens(T2.getDeltaT());
-            DesenhaBalasDisparador(T2.getDeltaT());
-            DesenhaBalasNavesInimigas(T2.getDeltaT());
+                DesenhaPersonagens(T2.getDeltaT());
+                DesenhaBalasDisparador(T2.getDeltaT());
+                DesenhaBalasNavesInimigas(T2.getDeltaT());
 
-            DesenhaIconesVida();
+                DesenhaIconesVida();
             }
         }
     }
@@ -610,23 +628,26 @@ void keyboard(unsigned char key, int x, int y)
         exit(0); // a tecla ESC for pressionada
         break;
     case ' ':
-        if(telaInicial){
+        if (telaInicial)
+        {
             telaInicial = false;
         }
-        if(vetorDePersonagens[0].nInstanciasBalas < 10)
+        if (vetorDePersonagens[0].nInstanciasBalas < 10)
         {
             CriaBalasDisparador();
         }
         break;
     case 'r':
-        if(telaFinal){
+        if (telaFinal)
+        {
             nInstanciasBalas = 0;
             vidasDisparador = 3;
             angulo = 0.0;
             nPontos = 0;
             nInstanciasPersonagens = 10;
             Personagens p;
-            for(int i = 0; i < nInstanciasPersonagens; i++){
+            for (int i = 0; i < nInstanciasPersonagens; i++)
+            {
                 vetorDePersonagens[i] = p;
             }
             init();
@@ -650,17 +671,7 @@ void arrow_keys(int a_keys, int x, int y)
         vetorDePersonagens[0].Rotacao -= 8;
         break;
     case GLUT_KEY_UP:
-        if (vetorDePersonagens[0].Posicao.y + 1 < Max.y - 3)
-        {
-            // calcula o deslocamento do personagem de acordo com sua rotacao
-            float deslocX = sin((vetorDePersonagens[0].Rotacao * M_PI) / 180);
-            float deslocY = cos((vetorDePersonagens[0].Rotacao * M_PI) / 180);
-
-            vetorDePersonagens[0].Posicao.x += 3 * -deslocX;
-            vetorDePersonagens[0].Posicao.y += 3 * deslocY;
-        }
-        break;
-    default:
+        movimentaDisparador();
         break;
     }
 }

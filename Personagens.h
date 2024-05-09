@@ -18,7 +18,7 @@ public:
     float Largura, Altura;
     float Rotacao;
     void desenha();
-    void AtualizaPosicao(double tempoDecorrido);
+    void AtualizaPosicao(double tempoDecorrido, Ponto max, Ponto min);
     double r,g,b;
     };
 
