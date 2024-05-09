@@ -54,5 +54,6 @@ void Balas::desenha()
 
 void Balas::AtualizaPosicao(double tempoDecorrido)
 {
-    
+    Posicao.x += 3 * Deslocamento.x;
+    Posicao.y += 3 * Deslocamento.y;
 }

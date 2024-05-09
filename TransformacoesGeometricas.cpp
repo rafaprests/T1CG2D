@@ -443,8 +443,6 @@ void DesenhaBalasDisparador(float tempoDecorrido)
     for (int i = 0; i < vetorDePersonagens[0].nInstanciasBalas; i++)
     {
         Balas *b = &vetorDePersonagens[0].vetorDeBalas[i];
-        b->Posicao.x += 3 * b->Deslocamento.x;
-        b->Posicao.y += 3 * b->Deslocamento.y;
 
         b->AtualizaPosicao(tempoDecorrido);
         b->desenha();
@@ -495,9 +493,6 @@ void DesenhaBalasNavesInimigas(float tempoDecorrido)
         for (int j = 0; j < vetorDePersonagens[i].nInstanciasBalas; j++)
         {
             Balas *b = &vetorDePersonagens[i].vetorDeBalas[j];
-
-            b->Posicao.x += 3 * b->Deslocamento.x;
-            b->Posicao.y += 3 * b->Deslocamento.y;
 
             b->AtualizaPosicao(tempoDecorrido);
             b->desenha();
