@@ -2,6 +2,7 @@
 #include <cmath>
 #include <ctime>
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
@@ -33,12 +34,14 @@ Poligono Mapa, Disparador, NaveInimiga1, NaveInimiga2, NaveInimiga3, Bala;
 // Limites logicos da area de desenho
 Ponto Min, Max;
 
-// vetor para guardar a posicao dos personagens
-Ponto vetorPontos[10];
-
-// vetor para armazenar os personagens
+//define numero de personagens
 int nInstanciasPersonagens = 10;
-Personagens vetorDePersonagens[10];
+
+// Vetor para guardar as posições dos personagens
+std::vector<Ponto> vetorPontos(nInstanciasPersonagens);
+
+// Vetor para armazenar os personagens
+std::vector<Personagens> vetorDePersonagens(nInstanciasPersonagens);
 
 int nPontos = 0;
 
