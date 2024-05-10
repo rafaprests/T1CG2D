@@ -35,15 +35,14 @@ Poligono Mapa, Disparador, NaveInimiga1, NaveInimiga2, NaveInimiga3, Bala;
 Ponto Min, Max;
 
 //define numero de personagens
-int nInstanciasPersonagens = 10;
+int nInstanciasInicial = 5;
+int nInstanciasPersonagens = nInstanciasInicial;
 
 // Vetor para guardar as posições dos personagens
 std::vector<Ponto> vetorPontos(nInstanciasPersonagens);
 
 // Vetor para armazenar os personagens
 std::vector<Personagens> vetorDePersonagens(nInstanciasPersonagens);
-
-int nPontos = 0;
 
 // caracteristicas inerentes ao disparador
 int nInstanciasBalas = 0;
@@ -263,6 +262,7 @@ float distanciaEntrePontos(const Ponto &p1, const Ponto &p2)
 
 Ponto CriaPontosAleatorios()
 {
+    int nroPontos = nInstanciasPersonagens;
     // Evita a borda da área de jogo
     Ponto min = Ponto(Min.x + 5, Min.y + 5);
     Ponto max = Ponto(Max.x - 5, Max.y - 5);
@@ -288,7 +288,7 @@ Ponto CriaPontosAleatorios()
         
         // Verifica se o ponto está a uma distância segura dos pontos existentes
         bool distanciaSegura = true;
-        for (int i = 0; i < nPontos; i++)
+        for (int i = 0; i < nroPontos; i++)
         {
             if (distanciaEntrePontos(novoPonto, vetorPontos[i]) < 10)
             {
@@ -312,12 +312,10 @@ void inicializaPontos(int nroPontos)
         if (i == 0)
         {
             vetorPontos[i] = Ponto(0, 0);
-            nPontos++;
         }
         else
         {
             vetorPontos[i] = CriaPontosAleatorios();
-            nPontos;
         }
     }
 }
@@ -362,7 +360,7 @@ void CriaPersonagens(int numeroDePersonagens)
             vetorDePersonagens[0].Posicao = vetorPontos[0];
             vetorDePersonagens[0].Rotacao = 0;
         }
-        else if (i <= div)
+        else if (i <= div + 1)
         {
             vetorDePersonagens[i].Posicao = vetorPontos[i];
             vetorDePersonagens[i].Rotacao = 0;
@@ -370,7 +368,7 @@ void CriaPersonagens(int numeroDePersonagens)
             vetorDePersonagens[i].Largura = 6;
             vetorDePersonagens[i].Altura = 8;
         }
-        else if (i <= (2 * div))
+        else if (i <= (2 * div + 1))
         {
             vetorDePersonagens[i].Posicao = vetorPontos[i];
             vetorDePersonagens[i].Rotacao = 0;
@@ -378,7 +376,7 @@ void CriaPersonagens(int numeroDePersonagens)
             vetorDePersonagens[i].Largura = 5;
             vetorDePersonagens[i].Altura = 8;
         }
-        else if (i <= (3 * div))
+        else if (i <= (3 * div + 1))
         {
             vetorDePersonagens[i].Posicao = vetorPontos[i];
             vetorDePersonagens[i].Rotacao = 0;
@@ -667,8 +665,7 @@ void keyboard(unsigned char key, int x, int y)
             nInstanciasBalas = 0;
             vidasDisparador = 3;
             angulo = 0.0;
-            nPontos = 0;
-            nInstanciasPersonagens = 10;
+            nInstanciasPersonagens = nInstanciasInicial;
             Personagens p;
             for (int i = 0; i < nInstanciasPersonagens; i++)
             {
