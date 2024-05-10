@@ -332,17 +332,35 @@ bool verificaBalaSaiuDaTela(Balas b)
     }
 }
 
-bool verificaBalaAtingiuObjeto(Balas b, float minX, float maxX, float minY, float maxY)
+bool verificaBalaAtingiuObjeto(Balas b, Personagens p)
 {
-    if (b.Posicao.x >= minX && b.Posicao.x <= maxX && b.Posicao.y >= minY && b.Posicao.y <= maxY)
+    // Transforma a posição da bala para o sistema de coordenadas local do objeto
+    Ponto posicaoLocalBala = b.Posicao - p.Posicao;
+    float anguloRad = (p.Rotacao * M_PI) / 180.0;
+    float cosAngulo = cos(anguloRad);
+    float sinAngulo = sin(anguloRad);
+    // Aplica a matriz de rotação inversa na posição da bala
+    Ponto posicaoRotacionadaBala;
+    posicaoRotacionadaBala.x = posicaoLocalBala.x * cosAngulo + posicaoLocalBala.y * sinAngulo;
+    posicaoRotacionadaBala.y = -posicaoLocalBala.x * sinAngulo + posicaoLocalBala.y * cosAngulo;
+
+    // Calcula os limites do objeto considerando sua rotação
+    float minX = -p.Largura / 2;
+    float maxX = p.Largura / 2;
+    float minY = 0;
+    float maxY = p.Altura;
+
+    // Verifica se a posição rotacionada da bala está dentro dos limites do objeto
+    if (posicaoRotacionadaBala.x >= minX && posicaoRotacionadaBala.x <= maxX && posicaoRotacionadaBala.y >= minY && posicaoRotacionadaBala.y <= maxY)
     {
-        return true;
+        return true; // Colisão detectada
     }
     else
     {
-        return false;
+        return false; // Sem colisão
     }
 }
+
 
 void CriaPersonagens(int numeroDePersonagens)
 {
@@ -496,7 +514,7 @@ void DesenhaBalasDisparador(float tempoDecorrido)
             float maxY = vetorDePersonagens[j].Posicao.y + vetorDePersonagens[j].Altura;
 
             // verifica se a posição da bala está dentro dos limites da nave inimiga
-            if (verificaBalaAtingiuObjeto(vetorDePersonagens[0].vetorDeBalas[i], minX, maxX, minY, maxY))
+            if (verificaBalaAtingiuObjeto(vetorDePersonagens[0].vetorDeBalas[i], vetorDePersonagens[j]))
             {
                 // remove a nave atingida do array de personagens
                 vetorDePersonagens[j] = vetorDePersonagens[nInstanciasPersonagens - 1];
@@ -543,7 +561,7 @@ void DesenhaBalasNavesInimigas(float tempoDecorrido)
             float minY = vetorDePersonagens[0].Posicao.y;
             float maxY = vetorDePersonagens[0].Posicao.y + vetorDePersonagens[0].Altura;
 
-            if (verificaBalaAtingiuObjeto(vetorDePersonagens[i].vetorDeBalas[j], minX, maxX, minY, maxY))
+            if (verificaBalaAtingiuObjeto(vetorDePersonagens[i].vetorDeBalas[j], vetorDePersonagens[0]))
             {
                 // Remova a bala atual do array de balas da nave inimiga
                 vetorDePersonagens[i].vetorDeBalas[j] = vetorDePersonagens[i].vetorDeBalas[vetorDePersonagens[i].nInstanciasBalas - 1];
