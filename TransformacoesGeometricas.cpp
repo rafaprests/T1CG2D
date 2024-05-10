@@ -123,7 +123,7 @@ void reshape(int w, int h)
 void DesenhaDisparador()
 {
     glPushMatrix();
-    defineCor(DarkPurple);
+    defineCor(NavyBlue);
     glPushMatrix();
     Disparador.desenhaPoligono();
     Disparador.pintaPoligono();
@@ -137,7 +137,7 @@ void DesenhaDisparador()
 void DesenhaNaveInimiga1()
 {
     glPushMatrix();
-    defineCor(Copper);
+    defineCor(OrangeRed);
     glPushMatrix();
     NaveInimiga1.desenhaPoligono();
     NaveInimiga1.pintaPoligono();
@@ -151,7 +151,7 @@ void DesenhaNaveInimiga1()
 void DesenhaNaveInimiga2()
 {
     glPushMatrix();
-    defineCor(Copper);
+    defineCor(OrangeRed);
     glPushMatrix();
     NaveInimiga2.desenhaPoligono();
     NaveInimiga2.pintaPoligono();
@@ -165,7 +165,7 @@ void DesenhaNaveInimiga2()
 void DesenhaNaveInimiga3()
 {
     glPushMatrix();
-    defineCor(Copper);
+    defineCor(OrangeRed);
     glPushMatrix();
     NaveInimiga3.desenhaPoligono();
     NaveInimiga3.pintaPoligono();
@@ -176,10 +176,21 @@ void DesenhaNaveInimiga3()
     glPopMatrix();
 }
 
-void DesenhaBala()
+void DesenhaBalaDisparador()
 {
     glPushMatrix();
-    defineCor(BlueViolet);
+    defineCor(SkyBlue);
+    glPushMatrix();
+    Bala.desenhaPoligono();
+    Bala.pintaPoligono();
+    glPopMatrix();
+    glPopMatrix();
+}
+
+void DesenhaBalaNaveInimiga()
+{
+    glPushMatrix();
+    defineCor(Firebrick);
     glPushMatrix();
     Bala.desenhaPoligono();
     Bala.pintaPoligono();
@@ -191,7 +202,7 @@ void DesenhaTelaInicial()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    defineCor(DarkPurple);
+    defineCor(NavyBlue);
     glRasterPos2f(-50, 20);
     string texto = "Press SPACE to start";
     for (const char &c : texto)
@@ -205,7 +216,7 @@ void DesenhaTelaFinal()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    defineCor(Copper);
+    defineCor(OrangeRed);
     glRasterPos2f(-35, 20);
     string texto1 = "GAME OVER";
     for (const char &c : texto1)
@@ -233,7 +244,7 @@ void DesenhaTelaVitoria()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    defineCor(DarkPurple);
+    defineCor(NavyBlue);
     glRasterPos2f(-20, 20);
     string texto = "You WON!";
     for (const char &c : texto)
@@ -389,7 +400,7 @@ void CriaBalasDisparador()
 
         vetorDePersonagens[0].vetorDeBalas[vetorDePersonagens[0].nInstanciasBalas].Posicao = posicaoInicial;
         vetorDePersonagens[0].vetorDeBalas[vetorDePersonagens[0].nInstanciasBalas].Rotacao = vetorDePersonagens[0].Rotacao;
-        vetorDePersonagens[0].vetorDeBalas[vetorDePersonagens[0].nInstanciasBalas].modelo = DesenhaBala;
+        vetorDePersonagens[0].vetorDeBalas[vetorDePersonagens[0].nInstanciasBalas].modelo = DesenhaBalaDisparador;
 
         // define o deslocamento da bala de acordo com a rotação do personagem
         vetorDePersonagens[0].vetorDeBalas[vetorDePersonagens[0].nInstanciasBalas].Deslocamento.x = -deslocX;
@@ -436,7 +447,7 @@ void CriaBalasNavesInimigas()
 
             vetorDePersonagens[i].vetorDeBalas[vetorDePersonagens[i].nInstanciasBalas].Posicao = posicaoInicial;
             vetorDePersonagens[i].vetorDeBalas[vetorDePersonagens[i].nInstanciasBalas].Rotacao = vetorDePersonagens[i].Rotacao;
-            vetorDePersonagens[i].vetorDeBalas[vetorDePersonagens[i].nInstanciasBalas].modelo = DesenhaBala;
+            vetorDePersonagens[i].vetorDeBalas[vetorDePersonagens[i].nInstanciasBalas].modelo = DesenhaBalaNaveInimiga;
 
             // define o deslocamento da bala de acordo com a rotação do personagem
             vetorDePersonagens[i].vetorDeBalas[vetorDePersonagens[i].nInstanciasBalas].Deslocamento.x = -0.5 * deslocX;
