@@ -35,7 +35,7 @@ Poligono Mapa, Disparador, NaveInimiga1, NaveInimiga2, NaveInimiga3, Bala;
 Ponto Min, Max;
 
 //define numero de personagens
-int nInstanciasInicial = 5;
+int nInstanciasInicial = 4;
 int nInstanciasPersonagens = nInstanciasInicial;
 
 // Vetor para guardar as posições dos personagens
@@ -360,7 +360,7 @@ void CriaPersonagens(int numeroDePersonagens)
             vetorDePersonagens[0].Posicao = vetorPontos[0];
             vetorDePersonagens[0].Rotacao = 0;
         }
-        else if (i <= div + 1)
+        else if (i%3 == 0)
         {
             vetorDePersonagens[i].Posicao = vetorPontos[i];
             vetorDePersonagens[i].Rotacao = 0;
@@ -368,7 +368,7 @@ void CriaPersonagens(int numeroDePersonagens)
             vetorDePersonagens[i].Largura = 6;
             vetorDePersonagens[i].Altura = 8;
         }
-        else if (i <= (2 * div + 1))
+        else if (i%2 == 0)
         {
             vetorDePersonagens[i].Posicao = vetorPontos[i];
             vetorDePersonagens[i].Rotacao = 0;
@@ -376,7 +376,7 @@ void CriaPersonagens(int numeroDePersonagens)
             vetorDePersonagens[i].Largura = 5;
             vetorDePersonagens[i].Altura = 8;
         }
-        else if (i <= (3 * div + 1))
+        else if (i%1 == 0)
         {
             vetorDePersonagens[i].Posicao = vetorPontos[i];
             vetorDePersonagens[i].Rotacao = 0;
