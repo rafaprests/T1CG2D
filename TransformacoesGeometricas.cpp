@@ -580,6 +580,13 @@ void DesenhaIconesVida()
     }
 }
 
+void AtualizaJogo(float temporizador){
+    DesenhaPersonagens(T2.getDeltaT());
+    DesenhaBalasDisparador(T2.getDeltaT());
+    DesenhaBalasNavesInimigas(T2.getDeltaT());
+    DesenhaIconesVida();
+}
+
 void movimentaDisparador()
 {
     // calcula o deslocamento do personagem de acordo com sua rotacao
@@ -618,22 +625,7 @@ void display(void)
             }
             else
             {
-                // Define os limites l�gicos da �rea OpenGL dentro da Janela
-                glMatrixMode(GL_MODELVIEW);
-                glLoadIdentity();
-
-                // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                // Coloque aqui as chamadas das rotinas que desenham os objetos
-                // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-                glLineWidth(1);
-                defineCor(SkyBlue);
-
-                DesenhaPersonagens(T2.getDeltaT());
-                DesenhaBalasDisparador(T2.getDeltaT());
-                DesenhaBalasNavesInimigas(T2.getDeltaT());
-
-                DesenhaIconesVida();
+                AtualizaJogo(T2.getDeltaT());
             }
         }
     }
